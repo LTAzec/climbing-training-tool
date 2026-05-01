@@ -52,7 +52,19 @@ export async function POST(req: Request) {
         if (diff <= 0) {
             progressionGuidance = `The target grade (${targetGrade}) is at or below the current grade (${currentGrade}). Focus on consolidating and refining performance at the current grade: cleaner technique, better movement quality, more reliable sends, and reducing weaknesses. Do not push for a higher grade.`;
         } else if (diff >= 4) {
-            progressionGuidance = `The target grade (${targetGrade}) is significantly higher than the current grade (${currentGrade}) — about ${diff} steps on the Fontainebleau scale. Make the plan realistic. Explicitly explain to the user, in the General tips section, that this kind of progression typically takes multiple training cycles spread over several months (not a single weekly plan), and that steady, sustainable progress is far better than overreaching. Build the current week as a solid first cycle that develops the right foundations.`;
+            progressionGuidance = `The target grade (${targetGrade}) is much higher than the current grade (${currentGrade}) — about ${diff} steps on the Fontainebleau scale.
+
+            Do NOT create a plan that makes this progression look achievable in one week.
+
+            The plan must be written as the first week of a longer training block. In the General tips section, clearly explain that progressing from ${currentGrade} to ${targetGrade} will likely take multiple training cycles over several months.
+
+            For this week:
+            - Prioritize structured progression, not random hard climbing.
+            - Include harder projecting only in controlled doses.
+            - Add more specific work for the user's goal (${goal}).
+            - For Intermediate or Advanced users, make the plan more challenging but still safe.
+            - Use progressive overload language: build capacity, improve movement quality, increase intensity gradually.
+            - Avoid making the plan too easy or generic.`;
         } else {
             progressionGuidance = `The target grade (${targetGrade}) is a moderate step up from the current grade (${currentGrade}) — ${diff} step(s) on the Fontainebleau scale. Build the plan to bridge that gap with appropriate strength, technique, and projecting work suited to the user's level.`;
         }
@@ -82,6 +94,13 @@ Grade progression guidance:
 ${progressionGuidance || "No specific grade progression guidance — base the plan on the user's level and goal."}
 
 The plan should help the user progress from their current grade toward their target grade while respecting all safety rules below.
+
+Difficulty calibration rules:
+- If the target grade is 1-2 Fontainebleau steps above the current grade, make the week moderately challenging.
+- If the target grade is 3+ steps above the current grade, make the plan clearly more structured and demanding, while still safe.
+- Do not overuse easy climbing unless it is part of warm-up, recovery, technique drills, or volume training.
+- For harder goals, include focused projecting, weakness training, movement drills, and strength/endurance work appropriate to the user's level.
+- The plan should feel like real training, not just casual climbing.
 
 Hard safety rules (must always follow):
 - Do NOT recommend campus board training for Beginner or Intermediate users.
