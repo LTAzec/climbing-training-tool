@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "Climbing Training Plan Generator",
   description:
     "Generate a personalized indoor climbing training plan based on your level, schedule, and goals.",
+  icons: {
+    icon: "/climbing-logo.svg",
+    shortcut: "/climbing-logo.svg",
+    apple: "/climbing-logo.svg",
+  },
 };
 
 export default function RootLayout({

@@ -11,18 +11,51 @@ export async function POST(req: Request) {
         );
     }
 
-    const { level, days, goal, injuries } = (body ?? {}) as {
-        level?: string;
-        days?: number | string;
-        goal?: string;
-        injuries?: string | null;
-    };
+    const { level, days, goal, injuries, currentGrade, targetGrade } =
+        (body ?? {}) as {
+            level?: string;
+            days?: number | string;
+            goal?: string;
+            injuries?: string | null;
+            currentGrade?: string;
+            targetGrade?: string;
+        };
 
     if (!level || !days || !goal) {
         return NextResponse.json(
             { error: "Missing required fields: level, days, and goal are required." },
             { status: 400 }
         );
+    }
+
+    const FONT_GRADES = [
+        "4",
+        "4+",
+        "5",
+        "5+",
+        "6A",
+        "6A+",
+        "6B",
+        "6B+",
+        "6C",
+        "6C+",
+        "7A",
+        "7A+",
+    ];
+
+    const currentIdx = currentGrade ? FONT_GRADES.indexOf(currentGrade) : -1;
+    const targetIdx = targetGrade ? FONT_GRADES.indexOf(targetGrade) : -1;
+
+    let progressionGuidance = "";
+    if (currentIdx >= 0 && targetIdx >= 0) {
+        const diff = targetIdx - currentIdx;
+        if (diff <= 0) {
+            progressionGuidance = `The target grade (${targetGrade}) is at or below the current grade (${currentGrade}). Focus on consolidating and refining performance at the current grade: cleaner technique, better movement quality, more reliable sends, and reducing weaknesses. Do not push for a higher grade.`;
+        } else if (diff >= 4) {
+            progressionGuidance = `The target grade (${targetGrade}) is significantly higher than the current grade (${currentGrade}) — about ${diff} steps on the Fontainebleau scale. Make the plan realistic. Explicitly explain to the user, in the General tips section, that this kind of progression typically takes multiple training cycles spread over several months (not a single weekly plan), and that steady, sustainable progress is far better than overreaching. Build the current week as a solid first cycle that develops the right foundations.`;
+        } else {
+            progressionGuidance = `The target grade (${targetGrade}) is a moderate step up from the current grade (${currentGrade}) — ${diff} step(s) on the Fontainebleau scale. Build the plan to bridge that gap with appropriate strength, technique, and projecting work suited to the user's level.`;
+        }
     }
 
     if (!process.env.OPENAI_API_KEY) {
@@ -41,7 +74,14 @@ User profile:
 - Level: ${level}
 - Days per week: ${days}
 - Goal: ${goal}
+- Current Fontainebleau bouldering grade: ${currentGrade || "not specified"}
+- Target Fontainebleau bouldering grade: ${targetGrade || "not specified"}
 - Injuries / limitations: ${injuries || "none"}
+
+Grade progression guidance:
+${progressionGuidance || "No specific grade progression guidance — base the plan on the user's level and goal."}
+
+The plan should help the user progress from their current grade toward their target grade while respecting all safety rules below.
 
 Hard safety rules (must always follow):
 - Do NOT recommend campus board training for Beginner or Intermediate users.

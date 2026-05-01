@@ -6,6 +6,22 @@ type Level = "Beginner" | "Intermediate" | "Advanced";
 type Days = "2" | "3" | "4";
 type Goal = "Strength" | "Technique" | "Endurance" | "General improvement";
 
+const FONT_GRADES = [
+  "4",
+  "4+",
+  "5",
+  "5+",
+  "6A",
+  "6A+",
+  "6B",
+  "6B+",
+  "6C",
+  "6C+",
+  "7A",
+  "7A+",
+] as const;
+type FontGrade = (typeof FONT_GRADES)[number];
+
 type SectionName = "Warm-up" | "Main" | "Extra" | "Recovery";
 type DaySection = { name: SectionName; lines: string[] };
 type ParsedDay = { number: string; focus: string; sections: DaySection[] };
@@ -102,6 +118,8 @@ export default function Home() {
   const [level, setLevel] = useState<Level>("Beginner");
   const [days, setDays] = useState<Days>("3");
   const [goal, setGoal] = useState<Goal>("General improvement");
+  const [currentGrade, setCurrentGrade] = useState<FontGrade>("5");
+  const [targetGrade, setTargetGrade] = useState<FontGrade>("6A");
   const [injuries, setInjuries] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -122,6 +140,8 @@ export default function Home() {
           level,
           days: Number(days),
           goal,
+          currentGrade,
+          targetGrade,
           injuries: injuries.trim() || null,
         }),
       });
@@ -160,7 +180,14 @@ export default function Home() {
   return (
     <div className="min-h-screen w-full bg-zinc-50 dark:bg-black font-sans">
       <main className="mx-auto w-full max-w-2xl px-4 py-10 sm:py-16">
-        <header className="mb-8 sm:mb-10">
+        <header className="mb-10 sm:mb-12 text-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/climbing-logo.svg"
+            alt=""
+            aria-hidden="true"
+            className="mx-auto mb-4 w-28 sm:w-32 h-auto mb-8 sm:mb-10"
+          />
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Climbing Training Plan Generator
           </h1>
@@ -190,6 +217,53 @@ export default function Home() {
               <option value="Intermediate">Intermediate</option>
               <option value="Advanced">Advanced</option>
             </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                htmlFor="currentGrade"
+                className="block text-sm font-medium text-zinc-800 dark:text-zinc-200 mb-1.5"
+              >
+                Current grade
+              </label>
+              <select
+                id="currentGrade"
+                value={currentGrade}
+                onChange={(e) =>
+                  setCurrentGrade(e.target.value as FontGrade)
+                }
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 px-3 py-2.5 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100"
+              >
+                {FONT_GRADES.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="targetGrade"
+                className="block text-sm font-medium text-zinc-800 dark:text-zinc-200 mb-1.5"
+              >
+                Target grade
+              </label>
+              <select
+                id="targetGrade"
+                value={targetGrade}
+                onChange={(e) =>
+                  setTargetGrade(e.target.value as FontGrade)
+                }
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950 px-3 py-2.5 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100"
+              >
+                {FONT_GRADES.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>
