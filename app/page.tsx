@@ -374,7 +374,14 @@ export default function Home() {
           </div>
         )}
 
-        {plan && <PlanResult plan={plan} />}
+        {plan && (
+          <>
+            <PlanResult plan={plan} />
+
+            {/* AdSense block */}
+            <AdBlock />
+          </>
+        )}
       </main>
     </div>
   );
@@ -681,5 +688,27 @@ function PlanResult({ plan }: { plan: string }) {
         </p>
       )}
     </section>
+  );
+}
+
+function AdBlock() {
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch {}
+  }, []);
+
+  return (
+    <div className="mt-8">
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-8649492993705027"
+        data-ad-slot="1234567890" // vervangen straks!
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
+    </div>
   );
 }
