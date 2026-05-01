@@ -46,6 +46,16 @@ export async function POST(req: Request) {
     const currentIdx = currentGrade ? FONT_GRADES.indexOf(currentGrade) : -1;
     const targetIdx = targetGrade ? FONT_GRADES.indexOf(targetGrade) : -1;
 
+    const gradeDiff =
+        currentIdx >= 0 && targetIdx >= 0 ? targetIdx - currentIdx : null;
+
+    const intensityGuidance =
+        gradeDiff !== null && gradeDiff >= 4
+            ? `High progression demand: the user is aiming for a major grade jump. The plan must include at least one true limit/projecting session with attempts around ${currentGrade} to ${targetGrade}, but scaled safely to the user's level. Do not keep most main work below the current grade.`
+            : gradeDiff !== null && gradeDiff >= 2
+            ? `Moderate progression demand: include at least one session with work slightly above the user's current grade and one session focused on weaknesses.`
+            : `Low progression demand: focus on consolidation, movement quality, consistency, and controlled progression.`;
+
     let progressionGuidance = "";
     if (currentIdx >= 0 && targetIdx >= 0) {
         const diff = targetIdx - currentIdx;
@@ -101,12 +111,33 @@ Difficulty calibration rules:
 - Do not overuse easy climbing unless it is part of warm-up, recovery, technique drills, or volume training.
 - For harder goals, include focused projecting, weakness training, movement drills, and strength/endurance work appropriate to the user's level.
 - The plan should feel like real training, not just casual climbing.
+- Each session must have a clear purpose (e.g. projecting, technique, volume, strength).
+- Avoid repeating the same type of session across all days.
+- Include at least one session focused on harder attempts near the user's limit (projecting).
+- Include at least one session focused on technique or movement quality.
+- Include variation between sessions.
+
+Intensity guidance:
+${intensityGuidance}
+
+Training quality rules:
+- Main work should match the user's current and target grades.
+- Do not prescribe most main climbing below the user's current grade, except for warm-up, recovery, or technique drills.
+- If the user targets a much higher grade, include controlled exposure to harder climbing near or above their current limit.
+- For a 6A to 7A target, include structured projecting around 6B to 6C, not only 5C or 6A climbing.
+- For a 6B to 7A+ target, include structured projecting around 6C to 7A, with full rest and focus on single hard moves.
+- Use easier grades for volume and technique only, not as the main progression stimulus.
+- Every Main section must clearly explain why that work helps the user progress.
+- For projecting sessions, require full rest (2-3 minutes) between attempts.
+- Emphasize working on single hard moves or crux sequences, not just full attempts.
+- Ensure at least one session pushes the user close to their physical limit in a controlled way.
+- Technique sessions should still include problems near the user's current grade, not only very easy climbing.
 
 Hard safety rules (must always follow):
 - Do NOT recommend campus board training for Beginner or Intermediate users.
 - Do NOT recommend fingerboard / hangboard training for Beginner users.
 - For Intermediate users, fingerboard training is only allowed using large, comfortable holds (e.g. big jugs or a deep edge ~20mm+) at low intensity, short hangs, and well within easy effort. Never max hangs.
-- Avoid extreme volume, "to failure" sets, and max-effort exercises for any level.
+- Avoid extreme volume, reckless "to failure" sets, and repeated max-effort exercises. Controlled hard attempts are allowed for Intermediate and Advanced users when paired with full rest and good technique.
 - Avoid dynamic, high-injury-risk moves (e.g. dynos, deep lock-offs at max load) for Beginner and Intermediate users.
 - If the user reports injuries, adapt the plan to avoid aggravating them and prefer low-load alternatives.
 - Every session must be realistic: total duration between 45 and 75 minutes including warm-up.
